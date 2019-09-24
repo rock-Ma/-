@@ -1,0 +1,75 @@
+interface Animal{
+	void shout();
+	void food();
+	void tx();
+}
+
+class Hawk implements  Animal{
+    public void shout(){
+		System.out.println("�ϻ��Ľ����ǡ����..��");
+    }
+     public  void food(){
+		System.out.println("�ϻ���ʳ������");
+     }
+    public  void tx(){
+		System.out.println("�ϻ������ͺܴ�\n");
+     }
+}
+class Sparrow implements  Animal{
+     public void shout(){
+		System.out.println("С��Ľ����ǡ�����..��");
+    }
+interface Animal{
+	void shout();
+	void food();
+	void tx();
+}
+
+class Hawk implements  Animal{
+    public void shout(){
+		System.out.println("老虎的叫声是“嗷嗷嗷..”");
+    }
+     public  void food(){
+		System.out.println("老虎的食物是肉");
+     }
+    public  void tx(){
+		System.out.println("老虎的体型很大\n");
+     }
+}
+class Sparrow implements  Animal{
+     public void shout(){
+		System.out.println("小鸟的叫声是“渣渣..”");
+    }
+     public  void food(){
+		System.out.println("小鸟的食物是稻谷");
+     }
+    public  void tx(){
+		System.out.println("小鸟的体型很小\n");
+     }
+}
+class Cuckoo implements  Animal{
+     public void shout(){
+		System.out.println("猫的叫声是“喵喵..”");
+    }
+     public  void food(){
+		System.out.println("猫的食物是鱼");
+     }
+    public  void tx(){
+		System.out.println("猫的体型不大");
+     }
+}
+class Factory{
+    public static  Animal getCarInstance(){
+        return new Cuckoo();
+    }
+}
+
+public class msyy{
+    public static void main (String[] args){
+      Animal c=Factory.getCarInstance();
+	 c.shout();
+	 c.food();
+	 c.tx();
+    } 
+
+}
