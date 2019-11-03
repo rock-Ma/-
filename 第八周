@@ -1,0 +1,350 @@
+public class Example11
+{
+	public static void main(String[] args){
+		SaleThread saleThread=new SaleThread();
+	new Thread (saleThread,"�߳�һ").start();
+	new Thread (saleThread,"�̶߳�").start();
+	new Thread (saleThread,"�߳���").start();
+	new Thread (saleThread,"�߳���").start();
+	}
+}
+class SaleThread implements Runnable
+{
+	private int tickets=10;
+	public void run(){
+	     while(tickets>0){
+		     try{
+			     Thread.sleep(10);
+			 }catch(InterruptedException e){
+			     e.printStackTrace();
+			 }
+		  System.out.println(Thread.currentThread().getName()+"---������Ʊ"+tickets--);
+
+		 }
+	    
+	}
+}
+public class Example12
+{
+	public static void main(String[] args){
+		SaleThread saleThread=new SaleThread();
+	new Thread (saleThread,"�߳�һ").start();
+	new Thread (saleThread,"�̶߳�").start();
+	new Thread (saleThread,"�߳���").start();
+	new Thread (saleThread,"�߳���").start();
+	}
+}
+class SaleThread implements Runnable
+{
+	private int tickets=10;
+	Object lock=new Object();
+	public void run(){
+	     while(true){
+           synchronized (lock){
+		   try{
+			     Thread.sleep(10);
+			 }catch(InterruptedException e){
+			     e.printStackTrace();
+			 }
+			 if(tickets>0){
+			  System.out.println(Thread.currentThread().getName()+"---������Ʊ"+tickets--);
+
+			 }else{
+			 break;
+			 }
+
+		   }
+
+		 }
+	    
+	}
+}
+public class Example13
+{
+	public static void main(String[] args){
+		SaleThread saleThread=new SaleThread();
+	new Thread (saleThread,"�߳�һ").start();
+	new Thread (saleThread,"�̶߳�").start();
+	new Thread (saleThread,"�߳���").start();
+	new Thread (saleThread,"�߳���").start();
+	}
+}
+class SaleThread implements Runnable
+{
+	private int tickets=10;
+	public void run(){
+	     while(true){
+            ff();
+			if(tickets<=0){
+			   break;
+			}
+		 } 
+	 }
+     private synchronized void ff(){
+			 if(tickets>0){
+				 try{
+			     Thread.sleep(10);
+			     }catch(InterruptedException e){
+			     e.printStackTrace();
+			     }
+			  System.out.println(Thread.currentThread().getName()+"---������Ʊ"+tickets--);
+			 }
+	 }
+
+
+
+}
+public class Example14
+{
+	public static void main(String[] args){
+	    SaleThread d1=new SaleThread(true);
+		SaleThread d2=new SaleThread(false);
+		new Thread(d1,"chinese").start();
+		new Thread(d2,"american").start();
+	}
+	
+}
+
+class SaleThread implements Runnable
+{
+	static Object cha=new Object();
+    static Object dao=new Object();
+	private boolean flag;
+    SaleThread(boolean flag){
+	    this.flag=flag;
+	}
+	public void run(){
+	      if(flag){
+			  while(true){
+				  synchronized(cha){
+                      System.out.println(Thread.currentThread().getName()+"---if---cha");
+				      synchronized(dao){
+                          System.out.println(Thread.currentThread().getName()+"---if---dao");
+					  }
+				  }
+			  }
+		  }else{
+			  while(true){
+				  synchronized(dao){
+                      System.out.println(Thread.currentThread().getName()+"---else---dao");
+				      synchronized(cha){
+                          System.out.println(Thread.currentThread().getName()+"---else---cha");
+					  }
+				  }
+			  }
+
+		  }
+
+	 }
+
+     
+
+
+
+
+}
+class Storag{
+	private int[] cells=new int[10];
+	private int inPos,outPos;
+	public void put(int num) {
+		cells[inPos]=num;
+		System.out.println("��cells["+inPos+"]�з�������---"+cells[inPos]);
+		inPos++;
+		if(inPos==cells.length)
+			inPos=0;
+	}
+	public void get() {
+		int data=cells[outPos];
+		System.out.println("��cells["+outPos+"]��ȡ������"+data);
+		outPos++;
+		if(outPos==cells.length)
+			outPos=0;
+	}
+}
+class Input implements Runnable{
+	private Storag st;
+	private int num;
+	Input(Storag st){
+		this.st=st;
+	}
+    public void run() {
+    	while(true) {
+    		st.put(num++);
+    	}
+    }
+}
+
+class Output implements Runnable{
+	private Storag st;
+	Output(Storag st){
+		this.st=st;
+	}
+    public void run() {
+    	while(true) {
+    		st.get();
+    	}
+    }
+}
+public class Example15{
+	public static void main(String[] args) {
+		Storag st = new Storag();
+		Input input=new Input (st);
+		Output output=new Output(st);
+		new Thread(input).start();
+		new Thread(output).start();
+	}
+}
+
+class Storag{
+	private int[] cells=new int[10];
+	private int inPos,outPos;
+	private int a;
+	public synchronized void put(int num) {
+		try {
+			while(a==cells.length) {
+				this.wait();
+			}
+			cells[inPos]=num;
+			System.out.println("��cells["+inPos+"]�з�������---"+cells[inPos]);
+			inPos++;
+			if(inPos==cells.length)
+				inPos=0;
+			a++;
+			this.notify();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+	public synchronized void get() {
+		try {
+			while(a==0) {
+				this.wait();
+			}
+			int data=cells[outPos];
+			System.out.println("��cells["+outPos+"]��ȡ������"+data);
+			cells[outPos]=0;
+			outPos++;
+			if(outPos==cells.length)
+				outPos=0;
+			a--;
+			this.notify();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+}
+class Input implements Runnable{
+	private Storag st;
+	private int num;
+	Input(Storag st){
+		this.st=st;
+	}
+    public void run() {
+    	while(true) {
+    		st.put(num++);
+    	}
+    }
+}
+
+class Output implements Runnable{
+	private Storag st;
+	Output(Storag st){
+		this.st=st;
+	}
+    public void run() {
+    	while(true) {
+    		st.get();
+    	}
+    }
+}
+public class Example16{
+	public static void main(String[] args) {
+		Storag st = new Storag();
+		Input input=new Input (st);
+		Output output=new Output(st);
+		new Thread(input).start();
+		new Thread(output).start();
+	}
+}
+
+class KKK{
+	public static void main(String[] args) {
+		JJJ st = new JJJ();
+		UUU p=new UUU (st);
+		TTT v=new TTT (st);
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(p).start();
+		new Thread(v).start();
+	}
+}
+class JJJ{
+	int[] a=new int[120];
+	int[] g=new int[12];
+	public static int b=1,c=0;
+	private int d=1,e,h,o;
+	public synchronized void shuchu() {
+		try {
+		    a[0] = 0;
+		    g[d]=0;
+		    for(int i=0;i<10;i++) {
+		    a[b]=a[b-1]+1;
+		    g[d]=g[d]+a[b];
+		    b++;
+		    }
+		    e=b-10;
+		    h=b-1;
+			System.out.println("��"+d+"���߳��������"+e+"��"+h+"�ĺ�Ϊ--"+g[d]);
+			d++;
+	    
+	    	this.notify();
+	   
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public synchronized void he() {
+		try {
+			while(d<10) {
+				this.wait();
+			}
+		for(int p=1;p<=10;p++) {
+			o=o+g[p];
+		}
+		System.out.println("ʮ���̵߳Ľ����Ϊ"+o);
+		
+	}catch(Exception e){
+		e.printStackTrace();
+	}
+	}
+}
+class UUU implements Runnable{
+	private JJJ st;
+	UUU(JJJ st){
+		this.st=st;
+	}
+	public void run() {	
+			st.shuchu();
+	}
+}
+class TTT implements Runnable{
+	private JJJ st;
+	TTT(JJJ st){
+		this.st=st;
+	}
+	public void run() {	
+			st.he();
+	}
+}
