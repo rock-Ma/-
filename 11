@@ -1,0 +1,39 @@
+package company;
+import rate.*;
+public interface Company {
+     public Rate producerate();
+}
+
+package company;
+import rate.*;
+public class DianximCompany implements Company{
+
+	@Override
+	public Rate producerate() {
+		// TODO Auto-generated method stub
+		return new DianxinRate();
+	}
+   
+}
+package company;
+import rate.*;
+public class LiantongCompany implements Company{
+
+	@Override
+	public Rate producerate() {
+		// TODO Auto-generated method stub
+		return new LiantongRate();
+	}
+    
+}
+package company;
+import rate.*;
+public class YidongCompany implements Company{
+
+	@Override
+	public Rate producerate() {
+		// TODO Auto-generated method stub
+		return new YidongRate();
+	}
+     
+}
